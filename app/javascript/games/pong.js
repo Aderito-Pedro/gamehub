@@ -17,15 +17,23 @@ export default class PongGame {
   }
 
   setupInput() {
-    window.addEventListener("keydown", (e) => {
+    this.handleKeyDown = (e) => {
       this.keys[e.key] = true;
       if (["ArrowUp", "ArrowDown", " ", "w", "s", "W", "S"].includes(e.key)) {
         e.preventDefault();
       }
-    });
-    window.addEventListener("keyup", (e) => {
+    };
+    this.handleKeyUp = (e) => {
       this.keys[e.key] = false;
-    });
+    };
+    window.addEventListener("keydown", this.handleKeyDown);
+    window.addEventListener("keyup", this.handleKeyUp);
+  }
+
+  destroy() {
+    this.stop();
+    window.removeEventListener("keydown", this.handleKeyDown);
+    window.removeEventListener("keyup", this.handleKeyUp);
   }
 
   resetGame() {
@@ -137,16 +145,22 @@ export default class PongGame {
 
     // Player paddle
     this.ctx.fillStyle = "#3b82f6"; // Tailwind Blue-500
-    this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
+    this.drawPaddle(this.player);
 
     // AI paddle
     this.ctx.fillStyle = "#ef4444"; // Tailwind Red-500
-    this.ctx.fillRect(this.ai.x, this.ai.y, this.ai.width, this.ai.height);
+    this.drawPaddle(this.ai);
 
     // Ball
     this.ctx.fillStyle = "#ffffff";
     this.ctx.beginPath();
     this.ctx.arc(this.ball.x, this.ball.y, this.ball.radius, 0, Math.PI * 2);
+    this.ctx.fill();
+  }
+
+  drawPaddle(paddle) {
+    this.ctx.beginPath();
+    this.ctx.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, paddle.width / 2);
     this.ctx.fill();
   }
 }

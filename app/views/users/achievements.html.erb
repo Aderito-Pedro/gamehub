@@ -1,0 +1,27 @@
+<div class="max-w-3xl mx-auto space-y-6">
+  <div class="text-center space-y-2">
+    <h1 class="text-3xl font-black tracking-tight">🏅 Conquistas de <%= @user.display_name %></h1>
+    <p class="text-base-content/70"><%= @earned.size %> de <%= @all_achievements.size %> conquistas desbloqueadas</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <% @all_achievements.each do |achievement| %>
+      <% earned = @earned[achievement.id] %>
+      <div class="card bg-base-100 shadow-lg border <%= earned ? 'border-primary/40' : 'border-base-content/10 opacity-50' %>">
+        <div class="card-body p-5 flex-row items-center gap-4">
+          <div class="text-4xl"><%= earned ? "🏆" : "🔒" %></div>
+          <div class="flex-1">
+            <h3 class="font-bold"><%= achievement.name %></h3>
+            <p class="text-xs text-base-content/70"><%= achievement.description %></p>
+            <div class="flex items-center justify-between mt-1">
+              <span class="badge badge-sm badge-outline"><%= achievement.points %> pts</span>
+              <% if earned %>
+                <span class="text-[10px] text-base-content/50">Ganha em <%= earned.earned_at.strftime("%d/%m/%Y") %></span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

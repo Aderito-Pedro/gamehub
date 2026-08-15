@@ -41,6 +41,48 @@ games = [
     description: "Encontre os pares correspondentes de cartas neste jogo clássico de testar e treinar a sua memória.",
     category: "Casual",
     how_to_play: "Clique em uma carta para virá-la e tente encontrar a sua correspondente."
+  },
+  {
+    name: "Maze Chase",
+    description: "Guie o seu herói pelo labirinto comendo todos os pontos enquanto foge de três perseguidores implacáveis.",
+    category: "Arcade",
+    how_to_play: "Use as setas do teclado para mover pelo labirinto. Coma todos os pontos sem deixar que um perseguidor o alcance."
+  },
+  {
+    name: "Speed Racer",
+    description: "Desvie do trânsito numa corrida sem fim que fica cada vez mais rápida quanto mais tempo sobreviver.",
+    category: "Corrida",
+    how_to_play: "Use as setas Esquerda e Direita para mudar de faixa e desviar dos carros que vêm no sentido contrário."
+  },
+  {
+    name: "Platform Hero",
+    description: "Salte entre plataformas, esmague inimigos, apanhe moedas e chegue à bandeira no final da fase.",
+    category: "Plataforma",
+    how_to_play: "Use as setas Esquerda/Direita para mover e Cima (ou Espaço) para saltar. Salte em cima dos inimigos para os derrotar."
+  },
+  {
+    name: "Tank Duel",
+    description: "Duelo de artilharia por turnos. Ajuste o ângulo e a potência para acertar no tanque inimigo antes que ele acerte em você.",
+    category: "Ação",
+    how_to_play: "Use Cima/Baixo para ajustar o ângulo, Esquerda/Direita para ajustar a potência, e Espaço para disparar."
+  },
+  {
+    name: "Bomb Arena",
+    description: "Coloque bombas para destruir paredes e inimigos numa arena em grelha, sem se apanhar na própria explosão.",
+    category: "Ação",
+    how_to_play: "Use as setas para mover e Espaço para colocar uma bomba. Destrua todos os inimigos sem ser apanhado pela explosão."
+  },
+  {
+    name: "Block Smash",
+    description: "Uma variante do clássico quebra-blocos com power-ups: plataforma mais larga, multi-bola e bola mais lenta.",
+    category: "Arcade",
+    how_to_play: "Use o mouse ou as setas Esquerda/Direita para mover a plataforma. Apanhe os power-ups que caem dos blocos destruídos."
+  },
+  {
+    name: "Star Blaster",
+    description: "Pilote a sua nave, destrua os asteroides que se aproximam e sobreviva o máximo de tempo possível no espaço.",
+    category: "Ação",
+    how_to_play: "Use Esquerda/Direita para mover a nave e Espaço para disparar. Destrua os asteroides antes que colidam consigo."
   }
 ]
 

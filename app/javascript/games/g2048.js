@@ -16,7 +16,7 @@ export default class Game2048 {
   }
 
   setupInput() {
-    window.addEventListener("keydown", (e) => {
+    this.handleKeyDown = (e) => {
       if (!this.running) return;
       let moved = false;
       if (e.key === "ArrowLeft") { moved = this.moveLeft(); e.preventDefault(); }
@@ -33,7 +33,13 @@ export default class Game2048 {
           this.onGameOver(this.score);
         }
       }
-    });
+    };
+    window.addEventListener("keydown", this.handleKeyDown);
+  }
+
+  destroy() {
+    this.stop();
+    window.removeEventListener("keydown", this.handleKeyDown);
   }
 
   resetGame() {
@@ -163,7 +169,8 @@ export default class Game2048 {
 
         if (val > 0) {
           this.ctx.fillStyle = val <= 4 ? "#776e65" : "#f9f6f2";
-          this.ctx.font = "bold 32px sans-serif";
+          const fontSize = val < 100 ? this.cellSize * 0.4 : val < 1000 ? this.cellSize * 0.32 : this.cellSize * 0.26;
+          this.ctx.font = `bold ${Math.floor(fontSize)}px sans-serif`;
           this.ctx.textAlign = "center";
           this.ctx.textBaseline = "middle";
           this.ctx.fillText(val, x + w / 2, y + h / 2);

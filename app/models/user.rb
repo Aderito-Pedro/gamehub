@@ -18,7 +18,8 @@ class User < ApplicationRecord
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email || "#{auth.uid}@facebook.com"
       user.password = Devise.friendly_token[0, 20]
-      user.username = auth.info.name.gsub(/\s+/, "").downcase + SecureRandom.hex(3)
+      base_name = auth.info.name.presence || "player"
+      user.username = base_name.gsub(/\s+/, "").downcase + SecureRandom.hex(3)
       user.avatar_url = auth.info.image
     end
   end

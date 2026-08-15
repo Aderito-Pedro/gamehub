@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-
   def show
     @user = User.find(params[:id])
     @recent_scores = @user.scores.includes(:game).order(created_at: :desc).limit(10)

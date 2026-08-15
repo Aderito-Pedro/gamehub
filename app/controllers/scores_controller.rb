@@ -1,6 +1,5 @@
 class ScoresController < ApplicationController
   before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token, only: [:create] # We can rely on CSRF or skip for API testing (Instant Games)
 
   def create
     @game = Game.find_by!(slug: params[:game_slug])

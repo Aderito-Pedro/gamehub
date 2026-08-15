@@ -1,7 +1,35 @@
 import { Controller } from "@hotwired/stimulus"
-import PongGame from "../games/pong"
-import SnakeGame from "../games/snake"
-import Game2048 from "../games/g2048"
+import PongGame from "games/pong"
+import SnakeGame from "games/snake"
+import Game2048 from "games/g2048"
+import TetrisGame from "games/tetris"
+import FlappyBirdGame from "games/flappy_bird"
+import BreakoutGame from "games/breakout"
+import MemoryGame from "games/memory"
+import MazeChaseGame from "games/maze_chase"
+import SpeedRacerGame from "games/speed_racer"
+import PlatformHeroGame from "games/platform_hero"
+import TankDuelGame from "games/tank_duel"
+import BombArenaGame from "games/bomb_arena"
+import BlockSmashGame from "games/block_smash"
+import StarBlasterGame from "games/star_blaster"
+
+const GAME_CLASSES = {
+  "pong": PongGame,
+  "snake": SnakeGame,
+  "2048": Game2048,
+  "tetris": TetrisGame,
+  "flappy bird": FlappyBirdGame,
+  "breakout": BreakoutGame,
+  "memory": MemoryGame,
+  "maze chase": MazeChaseGame,
+  "speed racer": SpeedRacerGame,
+  "platform hero": PlatformHeroGame,
+  "tank duel": TankDuelGame,
+  "bomb arena": BombArenaGame,
+  "block smash": BlockSmashGame,
+  "star blaster": StarBlasterGame,
+}
 
 export default class extends Controller {
   static targets = ["canvas", "scoreDisplay", "startBtn", "stopBtn", "message"]
@@ -15,20 +43,17 @@ export default class extends Controller {
 
   disconnect() {
     if (this.gameInstance) {
-      this.gameInstance.stop();
+      this.gameInstance.destroy();
     }
   }
 
   setupGame() {
     const canvas = this.canvasTarget;
     const name = this.gameNameValue.toLowerCase();
+    const GameClass = GAME_CLASSES[name];
 
-    if (name === "pong") {
-      this.gameInstance = new PongGame(canvas, this.updateScore.bind(this), this.gameOver.bind(this));
-    } else if (name === "snake") {
-      this.gameInstance = new SnakeGame(canvas, this.updateScore.bind(this), this.gameOver.bind(this));
-    } else if (name === "2048") {
-      this.gameInstance = new Game2048(canvas, this.updateScore.bind(this), this.gameOver.bind(this));
+    if (GameClass) {
+      this.gameInstance = new GameClass(canvas, this.updateScore.bind(this), this.gameOver.bind(this));
     }
   }
 

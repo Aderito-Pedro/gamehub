@@ -5,6 +5,7 @@ class LeaderboardsController < ApplicationController
     if params[:game_id].present?
       @game = Game.find(params[:game_id])
       @scores = Score.where(game: @game)
+                     .includes(:user)
                      .select("DISTINCT ON (user_id) *")
                      .order("user_id, value DESC")
                      .sort_by { |s| -s.value }

@@ -1,0 +1,50 @@
+<div class="max-w-3xl mx-auto space-y-8">
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-black tracking-tight">Jogue no <span class="text-primary">Facebook</span></h1>
+    <p class="text-base-content/70">Leve os jogos do GameHub para dentro do Facebook e desafie os seus amigos.</p>
+  </div>
+
+  <div class="card bg-base-100 shadow-md border border-base-content/10">
+    <div class="card-body p-8 space-y-6">
+      <div class="flex gap-4">
+        <div class="text-3xl">1️⃣</div>
+        <div>
+          <h2 class="font-bold text-lg">Entre com a sua conta do Facebook</h2>
+          <p class="text-sm text-base-content/70 mt-1">Use o botão "Continuar com Facebook" na tela de login para ligar a sua conta do GameHub à sua conta do Facebook. As suas pontuações passam a ficar associadas ao seu perfil.</p>
+          <% unless user_signed_in? %>
+            <%= button_to "Entrar com Facebook", user_facebook_omniauth_authorize_path, class: "btn btn-outline btn-sm mt-3", data: { turbo: false } %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="flex gap-4">
+        <div class="text-3xl">2️⃣</div>
+        <div>
+          <h2 class="font-bold text-lg">Partilhe a sua pontuação</h2>
+          <p class="text-sm text-base-content/70 mt-1">Depois de terminar uma partida, partilhe o seu resultado no seu feed do Facebook para desafiar os seus amigos a superarem a sua pontuação.</p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="flex gap-4">
+        <div class="text-3xl">3️⃣</div>
+        <div>
+          <h2 class="font-bold text-lg">Facebook Instant Games</h2>
+          <p class="text-sm text-base-content/70 mt-1">
+            Os jogos do GameHub são construídos em JavaScript puro e canvas HTML5, prontos para serem
+            embrulhados com o SDK do Facebook Instant Games (<code class="text-xs bg-base-200 px-1 rounded">fbinstant.js</code>)
+            para correrem diretamente dentro da app do Facebook e do Messenger. Esta integração está a ser
+            preparada e será ativada assim que a aplicação for submetida à revisão da Meta.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <%= link_to "← Voltar para os jogos", root_path, class: "link link-primary" %>
+  </div>
+</div>

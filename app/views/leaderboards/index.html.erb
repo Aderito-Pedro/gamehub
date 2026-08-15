@@ -1,0 +1,43 @@
+<div class="space-y-6">
+  <div class="text-center space-y-2">
+    <h1 class="text-4xl font-black tracking-tight">🏆 Leaderboard</h1>
+    <p class="text-base-content/70">Confira os melhores jogadores do GameHub.</p>
+  </div>
+
+  <!-- Game Selector Tabs -->
+  <div class="flex flex-wrap gap-2 justify-center">
+    <%= link_to "Ranking Global", global_leaderboard_path, class: "btn btn-sm #{@game.nil? ? 'btn-primary' : 'btn-ghost bg-base-200'}" %>
+    <% @games.each do |game| %>
+      <%= link_to game.name, global_leaderboard_path(game_id: game.id), class: "btn btn-sm #{@game == game ? 'btn-primary' : 'btn-ghost bg-base-200'}" %>
+    <% end %>
+  </div>
+
+  <div class="card bg-base-100 shadow-md border border-base-content/10 max-w-2xl mx-auto">
+    <div class="card-body p-6">
+      <h2 class="card-title text-xl font-black mb-4">
+        <%= @game ? "Melhores em #{@game.name}" : "Ranking Geral (soma dos melhores scores)" %>
+      </h2>
+
+      <% rows = @game ? @scores : @global_scores %>
+      <% if rows.present? %>
+        <div class="space-y-2">
+          <% rows.each_with_index do |row, index| %>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-base-200 border border-base-300">
+              <div class="flex items-center gap-3">
+                <span class="font-bold text-xl w-8 text-center">
+                  <%= ["🥇", "🥈", "🥉"][index] || (index + 1) %>
+                </span>
+                <%= link_to row.user.display_name, user_path(row.user), class: "font-semibold link link-hover" %>
+              </div>
+              <span class="font-black text-primary">
+                <%= @game ? row.value : row.total_score.to_i %> pts
+              </span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-base-content/60 text-sm text-center py-8">Nenhuma pontuação registrada ainda. Seja o primeiro a jogar!</p>
+      <% end %>
+    </div>
+  </div>
+</div>
