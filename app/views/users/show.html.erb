@@ -1,0 +1,80 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <!-- Left Side: User profile info -->
+  <div class="card bg-base-100 shadow-xl border border-base-200 p-6 space-y-6">
+    <div class="flex flex-col items-center text-center space-y-4">
+      <div class="avatar placeholder">
+        <div class="bg-neutral text-neutral-content rounded-full w-24 h-24 flex items-center justify-center border-4 border-primary/20">
+          <% if @user.avatar_url.present? %>
+            <img src="<%= @user.avatar_url %>" alt="Avatar">
+          <% else %>
+            <span class="text-3xl font-black"><%= @user.display_name[0..1].upcase %></span>
+          <% end %>
+        </div>
+      </div>
+      <div>
+        <h2 class="text-2xl font-black"><%= @user.display_name %></h2>
+        <p class="text-sm text-base-content/60"><%= @user.email %></p>
+        <% if @user.guest? %>
+          <div class="badge badge-warning mt-2">Visitante</div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="divider">Favoritos</div>
+
+    <div class="space-y-2">
+      <% if @favorited_games.any? %>
+        <% @favorited_games.each do |game| %>
+          <%= link_to game.name, game_path(game), class: "btn btn-outline btn-sm w-full justify-start gap-2" %>
+        <% end %>
+      <% else %>
+        <p class="text-sm text-base-content/50 text-center py-2">Nenhum jogo favoritado ainda.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Right Side: Scores & Achievements -->
+  <div class="md:col-span-2 space-y-6">
+    <!-- Best Scores -->
+    <div class="card bg-base-100 shadow-xl border border-base-200 p-6">
+      <h3 class="text-xl font-black mb-4">Recordes Pessoais</h3>
+      <% if @best_scores.any? %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <% @best_scores.each do |score| %>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-base-200 border border-base-300">
+              <span class="font-bold"><%= score.game.name %></span>
+              <span class="font-black text-primary text-lg"><%= score.value %> pts</span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-base-content/60 text-sm">Nenhum recorde registrado ainda.</p>
+      <% end %>
+    </div>
+
+    <!-- Achievements -->
+    <div class="card bg-base-100 shadow-xl border border-base-200 p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-black">Conquistas Desbloqueadas</h3>
+        <%= link_to "Ver Todas", achievements_user_path(@user), class: "link link-primary link-hover text-sm" %>
+      </div>
+
+      <% if @earned_achievements.any? %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <% @earned_achievements.each do |ua| %>
+            <div class="flex items-center gap-3 p-3 rounded-lg bg-base-200 border border-base-300">
+              <div class="text-3xl">🏆</div>
+              <div>
+                <h4 class="font-bold text-sm"><%= ua.achievement.name %></h4>
+                <p class="text-xs text-base-content/70"><%= ua.achievement.description %></p>
+                <span class="text-[10px] text-base-content/50">Ganha em: <%= ua.earned_at.strftime("%d/%m/%Y") %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-base-content/60 text-sm">Nenhuma conquista desbloqueada ainda.</p>
+      <% end %>
+    </div>
+  </div>
+</div>

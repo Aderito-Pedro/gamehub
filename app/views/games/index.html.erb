@@ -1,0 +1,61 @@
+<div class="space-y-8">
+  <!-- Hero Section -->
+  <div class="hero bg-base-100 rounded-2xl shadow-xl p-8 md:p-12 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-8 border border-base-200">
+    <div class="max-w-xl space-y-4">
+      <h1 class="text-4xl md:text-5xl font-black tracking-tight">Os melhores jogos online e no <span class="text-primary">Facebook</span>!</h1>
+      <p class="text-base-content/70 text-lg">Jogue clássicos lendários diretamente no seu navegador, salve suas pontuações, dispute o ranking global e desafie seus amigos.</p>
+      <div class="flex flex-wrap gap-2 pt-2 justify-center md:justify-start">
+        <%= link_to "Ver Rankings", global_leaderboard_path, class: "btn btn-primary" %>
+        <%= link_to "Jogar no Facebook", facebook_integration_path, class: "btn btn-outline btn-secondary" %>
+      </div>
+    </div>
+    <div class="text-8xl select-none animate-bounce">
+      🎮
+    </div>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-base-100 p-4 rounded-xl border border-base-200 shadow-sm">
+    <%= form_with url: games_path, method: :get, class: "flex gap-2 w-full md:max-w-md", local: true do |f| %>
+      <div class="relative w-full">
+        <%= f.text_field :search, value: params[:search], placeholder: "Buscar jogos...", class: "input input-bordered w-full pr-10" %>
+        <% if params[:search].present? %>
+          <%= link_to "✕", games_path, class: "absolute right-3 top-3 text-base-content/50 hover:text-base-content" %>
+        <% end %>
+      </div>
+      <%= f.submit "Buscar", class: "btn btn-primary" %>
+    <% end %>
+
+    <!-- Categories Tabs -->
+    <div class="flex flex-wrap gap-2">
+      <%= link_to "Todos", games_path, class: "btn btn-sm #{params[:category].blank? ? 'btn-primary' : 'btn-ghost bg-base-200'}" %>
+      <% @categories.each do |cat| %>
+        <%= link_to cat, games_path(category: cat), class: "btn btn-sm #{params[:category] == cat ? 'btn-primary' : 'btn-ghost bg-base-200'}" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Games Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <% @games.each do |game| %>
+      <div class="card bg-base-100 shadow-lg border border-base-200 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1">
+        <figure class="bg-gradient-to-br from-primary/10 to-secondary/10 h-40 flex items-center justify-center relative overflow-hidden">
+          <span class="text-7xl group-hover:scale-110 transition-transform duration-300 select-none">
+            <%= { 'pong' => '🏓', 'snake' => '🐍', '2048' => '🔢', 'tetris' => '🧱', 'flappy bird' => '🐦', 'breakout' => '🧱', 'memory' => '🃏' }.fetch(game.name.downcase, '🎮') %>
+          </span>
+          <div class="absolute top-2 right-2 badge badge-neutral"><%= game.category %></div>
+        </figure>
+        <div class="card-body p-5">
+          <h2 class="card-title text-xl font-bold group-hover:text-primary transition-colors">
+            <%= game.name %>
+          </h2>
+          <p class="text-sm text-base-content/70 line-clamp-2"><%= game.description %></p>
+          <div class="card-actions justify-between items-center mt-4">
+            <span class="text-xs text-base-content/50">🕹️ <%= game.plays_count %> jogadas</span>
+            <%= link_to "Jogar", game_path(game), class: "btn btn-primary btn-sm group-hover:scale-105 transition-transform" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

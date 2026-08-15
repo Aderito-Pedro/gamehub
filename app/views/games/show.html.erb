@@ -1,0 +1,164 @@
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <!-- Game Board / Canvas -->
+  <div class="lg:col-span-2 space-y-6">
+    <div class="card bg-base-100 shadow-xl border border-base-200">
+      <div class="card-body p-6">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h1 class="text-3xl font-black tracking-tight"><%= @game.name %></h1>
+            <span class="badge badge-primary mt-1"><%= @game.category %></span>
+          </div>
+          
+          <!-- Favorite button -->
+          <% if user_signed_in? %>
+            <% if current_user.favorited_games.include?(@game) %>
+              <%= button_to game_favorite_path(@game), method: :delete, class: "btn btn-circle btn-outline btn-error btn-sm" do %>
+                ❤️
+              <% end %>
+            <% else %>
+              <%= button_to game_favorite_path(@game), method: :post, class: "btn btn-circle btn-outline btn-sm" do %>
+                🤍
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+
+        <!-- Canvas Container -->
+        <div 
+          data-controller="game" 
+          data-game-game-name-value="<%= @game.name %>"
+          data-game-save-url-value="<%= user_signed_in? ? game_scores_path(@game) : '' %>"
+          class="flex flex-col items-center gap-4 bg-neutral p-6 rounded-box border border-neutral-focus"
+        >
+          <div class="flex w-full justify-between items-center px-2">
+            <span data-game-target="scoreDisplay" class="text-xl font-bold text-neutral-content">
+              Pontuação: 0
+            </span>
+            <% if @high_score %>
+              <span class="text-sm font-semibold text-primary">
+                Recorde Pessoal: <%= @high_score %>
+              </span>
+            <% end %>
+          </div>
+
+          <!-- The Canvas Game Board -->
+          <div class="relative bg-slate-900 rounded shadow-inner border border-slate-950 overflow-hidden">
+            <canvas 
+              data-game-target="canvas" 
+              width="400" 
+              height="400" 
+              class="block max-w-full"
+            ></canvas>
+          </div>
+
+          <div class="flex flex-col items-center gap-2 w-full">
+            <div data-game-target="message" class="alert alert-info hidden py-2 font-bold text-center"></div>
+            
+            <div class="flex gap-2">
+              <button data-game-target="startBtn" data-action="click->game#start" class="btn btn-success btn-wide">
+                Iniciar Jogo
+              </button>
+              <button data-game-target="stopBtn" data-action="click->game#stop" class="btn btn-warning hidden">
+                Pausar
+              </button>
+            </div>
+            
+            <% unless user_signed_in? %>
+              <p class="text-xs text-base-content/60 mt-1">⚠️ Você está jogando como visitante. Para salvar suas pontuações, crie uma conta!</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to Play -->
+    <div class="card bg-base-100 shadow-xl border border-base-200">
+      <div class="card-body p-6">
+        <h2 class="card-title text-xl font-black mb-2">Como Jogar?</h2>
+        <p class="text-base-content/80 leading-relaxed"><%= @game.how_to_play %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboards & Comments Sidebar -->
+  <div class="space-y-6">
+    <!-- Game Leaderboard -->
+    <div class="card bg-base-100 shadow-xl border border-base-200">
+      <div class="card-body p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="card-title text-xl font-black">Melhores Jogadores</h2>
+          <%= link_to "Ver Todos", leaderboard_game_path(@game), class: "link link-primary link-hover text-sm" %>
+        </div>
+
+        <% top_scores = @game.scores.includes(:user).select("DISTINCT ON (user_id) *").order("user_id, value DESC").sort_by { |s| -s.value }.first(5) %>
+        <% if top_scores.any? %>
+          <div class="space-y-3">
+            <% top_scores.each_with_index do |score, index| %>
+              <div class="flex items-center justify-between p-2 rounded bg-base-200 border border-base-300">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-lg w-6">
+                    <% case index %>
+                    <% when 0 %>🥇
+                    <% when 1 %>🥈
+                    <% when 2 %>🥉
+                    <% else %><%= index + 1 %>
+                    <% end %>
+                  </span>
+                  <span class="font-semibold text-sm truncate max-w-[120px]"><%= score.user.display_name %></span>
+                </div>
+                <span class="font-black text-primary"><%= score.value %> pts</span>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-base-content/60 text-sm text-center py-4">Nenhuma pontuação registrada ainda. Seja o primeiro!</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="card bg-base-100 shadow-xl border border-base-200">
+      <div class="card-body p-6">
+        <h2 class="card-title text-xl font-black mb-4">Comentários e Avaliações</h2>
+
+        <% if user_signed_in? %>
+          <%= form_with model: [@game, @comment], class: "space-y-3 mb-6", local: true do |f| %>
+            <div class="form-control">
+              <%= f.label :rating, "Avaliação (1 a 5 estrelas)", class: "label label-text font-semibold" %>
+              <%= f.select :rating, [5, 4, 3, 2, 1], {}, class: "select select-bordered select-sm w-full" %>
+            </div>
+            <div class="form-control">
+              <%= f.label :content, "Escreva seu comentário", class: "label label-text font-semibold" %>
+              <%= f.text_area :content, rows: 2, placeholder: "O que achou deste jogo?", class: "textarea textarea-bordered w-full text-sm" %>
+            </div>
+            <%= f.submit "Enviar Comentário", class: "btn btn-primary btn-sm w-full" %>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-base-content/60 mb-6 text-center">Faça login para poder avaliar e comentar.</p>
+        <% end %>
+
+        <div class="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+          <% if @comments.any? %>
+            <% @comments.each do |comment| %>
+              <div class="border-b border-base-200 pb-3 last:border-b-0">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <span class="font-bold text-sm"><%= comment.user.display_name %></span>
+                    <span class="text-xs text-warning ml-2"><%= "★" * comment.rating %></span>
+                  </div>
+                  <% if comment.user == current_user %>
+                    <%= button_to "Excluir", game_comment_path(@game, comment), method: :delete, data: { confirm: "Tem certeza?" }, class: "text-xs text-error link hover:text-error-content bg-transparent border-0 cursor-pointer" %>
+                  <% end %>
+                </div>
+                <p class="text-sm text-base-content/80 mt-1 leading-relaxed"><%= comment.content %></p>
+                <span class="text-[10px] text-base-content/40"><%= time_ago_in_words(comment.created_at) %> atrás</span>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-base-content/60 text-sm text-center py-4">Nenhum comentário enviado ainda.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
