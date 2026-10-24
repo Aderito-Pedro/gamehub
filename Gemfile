@@ -73,4 +73,4 @@ end
 gem "devise", "~> 5.0"
 gem "omniauth", "~> 2.1"
 gem "omniauth-facebook", "~> 11.0"
-gem "daisyui", "~> 1.2"
+gem "daisyui", "~> 2.1"
